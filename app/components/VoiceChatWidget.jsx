@@ -390,8 +390,8 @@ export default function VoiceChatWidget({ workspaceId = '11111111-1111-1111-1111
                     <button
                         onClick={toggleVoice}
                         className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors ${voiceEnabled
-                                ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                            ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                            : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                             }`}
                     >
                         <span>{voiceEnabled ? '🔊' : '🔇'}</span>
@@ -410,8 +410,8 @@ export default function VoiceChatWidget({ workspaceId = '11111111-1111-1111-1111
                     return (
                         <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${msg.sender === 'user'
-                                    ? 'bg-blue-600 text-white rounded-br-none'
-                                    : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none'
+                                ? 'bg-blue-600 text-white rounded-br-none'
+                                : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none'
                                 }`}>
                                 {msg.text}
                                 {msg.sender === 'bot' && isLatestBot && (isSpeaking || isGeneratingAudio) && voiceEnabled && (
