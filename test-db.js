@@ -1,4 +1,4 @@
-import { query } from './app/lib/db.js';
+import { query } from './lib/db.js';
 
 async function testConnection() {
     try {

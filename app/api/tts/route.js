@@ -1,16 +1,32 @@
 import { NextResponse } from 'next/server';
+import { rateLimit } from '@/lib/rate-limit.js';
+
+const MAX_TEXT_LENGTH = 2000;
 
 export async function POST(request) {
     try {
-        const { text, model } = await request.json();
-        const HF_TOKEN = process.env.HF_TOKEN || process.env.NEXT_PUBLIC_HF_TOKEN;
-
-        if (!HF_TOKEN) {
-            console.error('❌ Missing Hugging Face token');
-            return NextResponse.json({ error: 'Missing token' }, { status: 500 });
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+        const rl = rateLimit({ windowMs: 60_000, max: 20, key: `tts:${ip}` });
+        if (!rl.allowed) {
+            return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
         }
 
-        const modelName = model || 'facebook/mms-tts-eng';
+        const { text, model } = await request.json();
+
+        if (!text || typeof text !== 'string' || text.trim().length === 0) {
+            return NextResponse.json({ error: 'text is required and must be a non-empty string' }, { status: 400 });
+        }
+        if (text.length > MAX_TEXT_LENGTH) {
+            return NextResponse.json({ error: `text must be under ${MAX_TEXT_LENGTH} characters` }, { status: 400 });
+        }
+
+        const HF_TOKEN = process.env.HF_TOKEN;
+        if (!HF_TOKEN) {
+            console.error('❌ Missing Hugging Face token');
+            return NextResponse.json({ error: 'Server misconfigured: missing HF_TOKEN' }, { status: 500 });
+        }
+
+        const modelName = typeof model === 'string' ? model : 'facebook/mms-tts-eng';
         const modelUrl = `https://api-inference.huggingface.co/models/${modelName}`;
 
         console.log(`🔊 [Server] Generating speech with: ${modelName}`);

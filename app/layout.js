@@ -1,3 +1,5 @@
+import './globals.css';
+
 export const metadata = {
   title: 'LeadPilot AI',
   description: 'AI Chatbot with RAG',

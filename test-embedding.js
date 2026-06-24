@@ -1,4 +1,4 @@
-import { generateEmbedding } from './app/lib/embeddings.js';
+import { generateEmbedding } from './lib/embeddings.js';
 
 async function testEmbedding() {
     try {
